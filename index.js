@@ -1,16 +1,42 @@
 "use strict";
 
-var scene, 
-	aspect, 
+var aspect, 
 	camera, 
 	renderer, 
 	controls;
 
 var audio, analyser, frequencydata;
 
+var scene = new THREE.Scene();
+
+//Creating a Custom Object
+function CustomSphere(){   
+    this.type = "CustomSphere";
+    
+    this.geo = new THREE.SphereGeometry(5, 20, 20);
+    this.mat = new THREE.MeshBasicMaterial({color : 0xd3d3d3});
+    
+    THREE.Mesh.call(this, this.geo, this.mat);
+}
+
+CustomSphere.prototype = Object.create(THREE.Mesh.prototype);
+CustomSphere.prototype.constructor = CustomSphere;
+
+CustomSphere.prototype.getMesh = function() {
+    return this.mesh;
+}
+var customSphere = new CustomSphere();
+scene.add(customSphere);
+
+scene.traverse(function(e){
+    if(e instanceof CustomSphere){
+        e.scale.x = 2.5;   
+    }
+});
+
 //init Three.JS
 function init(){
-	scene = new THREE.Scene();
+	//scene = new THREE.Scene();
 	aspect = window.innerWidth / window.innerHeight;
 	camera = new THREE.PerspectiveCamera(30, aspect, .5, 1000);
 	renderer = new THREE.WebGLRenderer({ alpha : true });
@@ -35,7 +61,7 @@ function init(){
 }
 
 //Create audio and create array of cubes
-function AnimateCubes(){
+function AnimateCubes(scale){
 	var ctx = new AudioContext();
 	audio = document.getElementById("mySong");
 	var audioSrc = ctx.createMediaElementSource(audio);
@@ -81,6 +107,8 @@ function RadialCubes(count, space, location){
     }
 	
 }
+
+
 
 function FillScene(){
     AnimateCubes();
