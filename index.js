@@ -63,7 +63,7 @@ function AnimateCubes(){
 }
 
 function RadialCubes(count, space, location){
-    var cubeGeo = new THREE.BoxGeometry(1, 1, 1);
+    var cubeGeo = new THREE.BoxGeometry(.25, .25, 1.5);
     var mat = new THREE.MeshBasicMaterial({color:0xd3d3d3});
     var loc = new THREE.Vector3(location);
     
@@ -73,13 +73,11 @@ function RadialCubes(count, space, location){
         
         var x = space * Math.cos(angle);
         var y = space * Math.sin(angle);
-        //var location = new THREE.Vector3(x, y, 0);
         scene.add(cube);
         
         cube.position.setY(x);
         cube.position.setX(y);
-        cube.rotation.z = x;
-        
+        cube.lookAt(location);
     }
 	
 }
@@ -87,7 +85,7 @@ function RadialCubes(count, space, location){
 function FillScene(){
     AnimateCubes();
     var location = new THREE.Vector3(0, 0, 0);
-	RadialCubes(12, 5, location);
+	RadialCubes(40, 5, location);
 }
 
 
