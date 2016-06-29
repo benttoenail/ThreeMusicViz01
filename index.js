@@ -5,7 +5,7 @@ var scene,
 	camera, 
 	renderer, 
 	controls;
-	
+
 var audio, analyser, frequencydata;
 
 //init Three.JS
@@ -20,7 +20,7 @@ function init(){
 	document.body.appendChild(renderer.domElement);
 	renderer.setClearColor(0xFFFFF, 0);
 
-	camera.position.z = 10;
+	camera.position.z = 30;
 
 	//OrbitControls setup 
 	controls = new THREE.OrbitControls( camera, renderer.domElement);
@@ -62,6 +62,34 @@ function AnimateCubes(){
 	}
 }
 
+function RadialCubes(count, space, location){
+    var cubeGeo = new THREE.BoxGeometry(1, 1, 1);
+    var mat = new THREE.MeshBasicMaterial({color:0xd3d3d3});
+    var loc = new THREE.Vector3(location);
+    
+    for(var i = 0; i < count; i++){
+        var cube = new THREE.Mesh(cubeGeo, mat);
+        var angle = (Math.PI/2) + (i / count) * 2 * Math.PI;
+        
+        var x = space * Math.cos(angle);
+        var y = space * Math.sin(angle);
+        //var location = new THREE.Vector3(x, y, 0);
+        scene.add(cube);
+        
+        cube.position.setY(x);
+        cube.position.setX(y);
+        cube.rotation.z = x;
+        
+    }
+	
+}
+
+function FillScene(){
+    AnimateCubes();
+    var location = new THREE.Vector3(0, 0, 0);
+	RadialCubes(12, 5, location);
+}
+
 
 //render scene with animation
 function render(){
@@ -69,19 +97,20 @@ function render(){
 	analyser.getByteFrequencyData(frequencydata);
 
 	//loop through all instances of THREE.Mesh  
+    /*
 	scene.traverse(function (e) {
 		if(e instanceof THREE.Mesh){
-			e.scale.y = frequencydata[e.id] / 10;
+			e.scale.y = frequencydata[e.id] / 10 + 1;
 		}
 	});
-
+    */
 	controls.update();
 
 	renderer.render( scene, camera );
 }
 
 init();
-AnimateCubes();
+FillScene();
 render();
-audio.play();
+//audio.play();
 
