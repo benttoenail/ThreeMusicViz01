@@ -8,49 +8,7 @@ var aspect,
 var audio, analyser, frequencydata;
 
 var scene = new THREE.Scene();
-
-//Creating a Custom Object
-function CustomSphere(){   
-    this.type = "CustomSphere";
-    
-    this.geo = new THREE.SphereGeometry(5, 20, 20);
-    this.mat = new THREE.MeshBasicMaterial({color : 0xFFFF00});
-    
-    THREE.Mesh.call(this, this.geo, this.mat);
-}
-
-CustomSphere.prototype = Object.create(THREE.Mesh.prototype);
-CustomSphere.prototype.constructor = CustomSphere;
-
-CustomSphere.prototype.getMesh = function() {
-    return this.mesh;
-}
-var customSphere = new CustomSphere();
-//scene.add(customSphere);
-
-scene.traverse(function(e){
-    if(e instanceof CustomSphere){
-        e.scale.x = 2.5;   
-    }
-});
-
-//SoundBlock -->  Radially duplicated cubes that move to the music
-function SoundBlock(){
-    this.type = "SoundBlock";
-    
-    this.geo = new THREE.BoxGeometry(.03, .03, 1);
-    this.mat = new THREE.MeshBasicMaterial({color : 0xFFFF00});
-    
-    THREE.Mesh.call(this, this.geo, this.mat);
-}
-
-SoundBlock.prototype = Object.create(THREE.Mesh.prototype);
-SoundBlock.prototype.constructor = SoundBlock;
-
-SoundBlock.prototype.getMesh = function(){
-    return this.mesh;   
-}
-
+var clock = new THREE.Clock();
 
 //init Three.JS
 function init(){
@@ -137,7 +95,46 @@ function FillScene(){
 }
 
 function AnimateScene(){
+    var time = clock.getElapsedTime();
+    document.getElementById("clock").innerHTML = "Elasped Time: " + time;
+    
+    /*
+    TIMING
+    */
+    //INTRO 0 - 15.5 sec
+    if(time < 15.5){ //Slow build 
+        document.getElementById("songSection").innerHTML = "Intro";   
+    }
+    if(time > 15.5){
+        document.getElementById("songSection").innerHTML = "1st Verse";
+    }
+    if(time > 46.0){
+        document.getElementById("songSection").innerHTML = "1st Chorus";
+    }
+    if(time > 76.5){
+        document.getElementById("songSection").innerHTML = "2nd Verse";
+    }
+    if(time > 106.8){
+        document.getElementById("songSection").innerHTML = "2nd Chorus";
+    }
+    if(time > 137.0){
+        document.getElementById("songSection").innerHTML = "BreakDownIntro";
+    }
+    if(time > 141.6){
+        document.getElementById("songSection").innerHTML = "snap";
+    }
+    if(time > 142.0){
+        document.getElementById("songSection").innerHTML = "final Verse A";
+    }
+    if(time > 166.5){
+        document.getElementById("songSection").innerHTML = "final Verse B";
+    }
+    if(time > 197.5){ //Ending lasts for 7 seconds 
+        document.getElementById("songSection").innerHTML = "ending";
+    }
+    
     //loop through SoundBlockInstances
+    
     var smoothValue = 0; 
     smoothValue += (frequencydata[0] - smoothValue) * 0.1;
     
